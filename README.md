@@ -94,7 +94,7 @@ requirements.txt
 Clone repository
 
 ```bash
-git clone YOUR_GITHUB_LINK
+git clone AJAYRAJPUT08/SentinelVision-AI
 ```
 
 Install dependencies
