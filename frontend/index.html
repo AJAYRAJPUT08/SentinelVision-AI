@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelVision AI — Real-Time Face Recognition Security System</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="cyber-container">
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-badge">🛡️</div>
+                <div class="logo-text">
+                    <h1>SENTINEL<span>VISION</span></h1>
+                    <p class="subtitle">AI SURVEILLANCE v4.8</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-page="page-dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                    <span class="active-indicator"></span>
+                </button>
+                <button class="nav-btn" data-page="page-monitor">
+                    <span class="nav-icon">📹</span>
+                    <span class="nav-label">Live Monitor</span>
+                    <span class="active-indicator"></span>
+                </button>
+                <button class="nav-btn" data-page="page-database">
+                    <span class="nav-icon">🗄️</span>
+                    <span class="nav-label">Known Faces</span>
+                    <span class="active-indicator"></span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status-pill">
+                    <span class="status-dot green-pulse"></span>
+                    <span>ENGINE ACTIVE</span>
+                </div>
+                <div class="fps-meter">LIVE FPS: <span id="fps-val">30.0</span></div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+            <!-- PAGE 1: DASHBOARD -->
+            <section id="page-dashboard" class="page-view active-view">
+                <!-- TOP METRICS CARDS -->
+                <div class="top-cards">
+                    <div class="metric-card active-card">
+                        <div class="card-icon">⚡</div>
+                        <div class="card-info">
+                            <span class="card-label">SYSTEM STATUS</span>
+                            <h2 class="card-value neon-green">ACTIVE</h2>
+                        </div>
+                        <div class="card-glow green-glow"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="card-icon">👤</div>
+                        <div class="card-info">
+                            <span class="card-label">KNOWN FACES</span>
+                            <h2 id="known-count" class="card-value neon-blue">0</h2>
+                        </div>
+                        <div class="card-glow blue-glow"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="card-icon">⚠️</div>
+                        <div class="card-info">
+                            <span class="card-label">UNKNOWN FACES</span>
+                            <h2 id="unknown-count" class="card-value neon-red">0</h2>
+                        </div>
+                        <div class="card-glow red-glow"></div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="card-icon">🚨</div>
+                        <div class="card-info">
+                            <span class="card-label">THREAT LEVEL</span>
+                            <h2 id="threat-level" class="card-value neon-green">LOW</h2>
+                        </div>
+                        <div class="card-glow threat-glow"></div>
+                    </div>
+                </div>
+
+                <!-- CENTER PANELS -->
+                <div class="center-grid">
+                    <!-- Center Left: Live Camera Feed -->
+                    <div class="panel camera-panel">
+                        <div class="panel-header">
+                            <div class="header-left">
+                                <span class="header-dot red-pulse"></span>
+                                <h3>LIVE CAMERA FEED — SECTOR 01</h3>
+                            </div>
+                            <span class="codec-tag">H.264 / AI HYBRID</span>
+                        </div>
+                        <div class="video-container">
+                            <img id="live-video-feed" src="/video" alt="Real-Time Camera Feed" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgwIiBoZWlnaHQ9IjcyMCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzA3MGQxOCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjMDBmZmNjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DT05ORUNUSU5HIFRPIENBTUVSQS8vVklERU8gU1RSRUFBLi4uPC90ZXh0Pjwvc3ZnPg=='">
+                            <div class="video-hud-overlay">
+                                <div class="hud-corner top-left"></div>
+                                <div class="hud-corner top-right"></div>
+                                <div class="hud-corner bottom-left"></div>
+                                <div class="hud-corner bottom-right"></div>
+                                <div class="hud-crosshair"></div>
+                                <div class="hud-timestamp" id="hud-clock">00:00:00 UTC</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center Right: Detected Identity Panel -->
+                    <div class="panel identity-panel">
+                        <div class="panel-header">
+                            <h3>DETECTED IDENTITY PANEL</h3>
+                            <span class="ai-badge">DEEPFACE + OPENCV</span>
+                        </div>
+                        <div class="identity-body" id="identity-container">
+                            <div class="photo-frame" id="photo-border">
+                                <img id="detected-photo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMGExNTI1Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM0Mzc4OTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPj88L3RleHQ+PC9zdmc+" alt="Detected Face">
+                                <div class="scan-line"></div>
+                            </div>
+
+                            <div class="identity-details">
+                                <div class="detail-group">
+                                    <label>IDENTITY SUBJECT</label>
+                                    <h4 id="identity-name">NO SUBJECT DETECTED</h4>
+                                </div>
+
+                                <div class="detail-group" id="identity-role-group" style="display:none;">
+                                    <label>ROLE</label>
+                                    <h4 id="identity-role">—</h4>
+                                </div>
+
+                                <div class="detail-group">
+                                    <label>SECURITY AUTHORIZATION</label>
+                                    <div id="identity-status" class="status-badge status-neutral">STANDBY</div>
+                                </div>
+
+                                <div class="detail-group">
+                                    <label>MATCH CONFIDENCE</label>
+                                    <div class="confidence-wrapper">
+                                        <div class="confidence-bar-bg">
+                                            <div id="confidence-bar" class="confidence-bar-fill" style="width: 0%;"></div>
+                                        </div>
+                                        <span id="confidence-val">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM PANELS -->
+                <div class="bottom-grid">
+                    <!-- Bottom Left: Known Face Database Summary -->
+                    <div class="panel db-summary-panel">
+                        <div class="panel-header">
+                            <h3>KNOWN FACE DATABASE</h3>
+                            <button class="action-link" onclick="switchPage('page-database')">VIEW ALL →</button>
+                        </div>
+                        <div class="db-summary-list" id="db-summary-container">
+                            <div class="loading-text">Loading registered subjects...</div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Right: Recent Activity Log -->
+                    <div class="panel activity-panel">
+                        <div class="panel-header">
+                            <h3>RECENT ACTIVITY LOG</h3>
+                            <span class="live-tag">● LIVE</span>
+                        </div>
+                        <div class="activity-scroll" id="activity-log-container">
+                            <div class="empty-log">System surveillance active. Waiting for detection events...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 2: LIVE MONITOR -->
+            <section id="page-monitor" class="page-view">
+                <div class="monitor-container">
+                    <div class="monitor-header">
+                        <h2>FULL SCREEN SURVEILLANCE STATION — CAM 01</h2>
+                        <div class="monitor-controls">
+                            <span class="rec-badge">REC</span>
+                            <button class="btn-secondary" onclick="switchPage('page-dashboard')">Exit Monitor</button>
+                        </div>
+                    </div>
+                    <div class="fullscreen-video-wrapper">
+                        <img id="fullscreen-video-feed" src="/video" alt="Fullscreen Surveillance Feed">
+                        <div class="monitor-overlay">
+                            <div class="grid-lines"></div>
+                            <div class="monitor-hud-info">
+                                <span>SECTOR: BIO-LAB ENTRIWAY</span>
+                                <span>AI FILTER: FACIAL RECOGNITION ACTIVE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE 3: KNOWN FACES -->
+            <section id="page-database" class="page-view">
+                <div class="database-container">
+                    <div class="database-header">
+                        <div class="db-title-area">
+                            <h2>REGISTERED BIOMETRIC DATABASE</h2>
+                            <p>Automatically synchronizes with files inside known_faces/ directory</p>
+                        </div>
+                        <button class="btn-primary" id="open-enroll-modal-btn">+ Register New Face</button>
+                    </div>
+
+                    <div class="database-grid" id="full-db-grid">
+                        <div class="loading-text">Scanning registered face profiles...</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ENROLLMENT MODAL -->
+    <div id="enroll-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h3>REGISTER NEW BIOMETRIC PROFILE</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="enroll-form">
+                <div class="form-group">
+                    <label>SUBJECT FULL NAME</label>
+                    <input type="text" id="enroll-name" placeholder="e.g., AJAY KAYTE" required>
+                </div>
+                <div class="form-group">
+                    <label>SELECT FACE IMAGE (.JPG / .PNG)</label>
+                    <input type="file" id="enroll-file" accept="image/jpeg,image/png" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary close-modal">Cancel</button>
+                    <button type="submit" class="btn-primary">Enroll Subject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
